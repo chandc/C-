@@ -1,45 +1,57 @@
 // C++ program for function overriding
 #include<iostream>
-using std::cout;
+using namespace std;
 
-class Base_Class {
+const float pi=3.1416;
+
+class Shape {
     public:
-        virtual void PrintVirtual () 
-        {
-          std::cout << "This is a message from the base class!!" << "\n";
-        }
-
-        void Print () 
-        {
-          std::cout << "This displays the base class." << "\n";
-        }
+        Shape() { }
+        virtual double Area() const = 0;
+        virtual double PerimeterLength() const = 0;
 };
 
-class Derived_Class : public Base_Class {
+class Rectangle : public Shape {
+    private:
+       int width;
+       int height;
+  
   public:
-      //print () is already virtual function in derived class, we could also declared  as virtual
-      //void print () explicitly
-      void PrintVirtual ()  
-      {
-        std::cout << "This is a message from the derived class!!" << "\n";
-      }
-
-      void Print () 
-      {
-        std::cout << "This displays the derived class." << "\n";
-      }
+       Rectangle(int wid, int ht) { width=wid; height=ht; }
+       virtual double Area() const override{
+             std::cout << "Rectangle:" << "\n";
+             return width*height; 
+        }
+        virtual double PerimeterLength() const override{
+            std::cout << "Rectangle:" << "\n";
+            return 2*(width + height);
+        }
+};
+class Circle : public Shape {
+    private:
+       int radius;
+  
+  public:
+       Circle(int r) { radius=r; }
+         virtual double Area() const override {
+            std::cout << "Circle:" << "\n";
+            return Circle::radius*Circle::radius*pi;
+        }
+        virtual double PerimeterLength() const override{
+            std::cout << "Circle:" << "\n";
+            return 2 * radius*pi;
+    }
 };
 
 
-int main()  
-{
-    Base_Class *pointer;
-    Derived_Class der;
-    pointer = &der;
-    //virtual function, binded at runtime (Runtime polymorphism)
-    pointer->PrintVirtual();  // OUTPUT: print derived class
+int main() {
+    // Generic containter of Shapes (array) :
+    Shape** shapes = new Shape*[2];
+    shapes[0] = new Circle(12);
+    shapes[1] = new Rectangle(10, 6);
+    for (int i = 0;i < 2;i++) {
+        std::cout << "Area: " << shapes[i]->Area()<< "\n";
+        std::cout << "Perimeter: " << shapes[i]->PerimeterLength() << "\n";
 
-    // Non-virtual function, binded at compile time
-    pointer->Print(); // OUTPUT: print base class
-
+    }
 }
